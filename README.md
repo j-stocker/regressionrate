@@ -28,7 +28,7 @@ These are saved to `results.txt`.
 
 Using `results.txt`:
 
-* Instantaneous burn rate is calculated via central difference.
+* Instantaneous burn rate is calculated via forward difference.
 * Overall average burn rate is calculated from first and last data points.
 * The average burn rate of the furthest x coordinate is calculated from first and last data points.
 

@@ -28,7 +28,7 @@ These are saved to `results.txt`.
 
 Using `results.txt`:
 
-* Instantaneous burn rate is calculated via forward difference.
+* Instantaneous burn rate is calculated via central difference.
 * Overall average burn rate is calculated from first and last data points.
 * The average burn rate of the furthest x coordinate is calculated from first and last data points.
 
@@ -49,15 +49,6 @@ All results are saved to `burn_rates.txt`.
 
 ---
 
-## 🛠 Requirements
-
-* **VisIt** (for plot generation and export)
-* **Python 3.6+**
-
-  * No external libraries required (only uses `os` and `csv`)
-
----
-
 ## How to Run
 
 ### Step 1: Export `.xyz` files from VisIt
@@ -68,7 +59,6 @@ Run the VisIt script (`xcoords.py`) from within the VisIt GUI or CLI.
 This script:
 
 * Adds a contour plot of the `eta` variable
-* Applies a custom discrete color palette
 * Iterates over all timesteps
 * Exports `.xyz` files into a folder `./eta_coords/`
 

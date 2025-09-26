@@ -2,6 +2,7 @@ datadir = "./eta_coords"
 output_file = "results.txt"
 import os
 import csv
+import matplotlib.pyplot as plt
 
 def extract_second_column(filename):
     '''Extracts second column (x coords) from XYZ file'''
@@ -118,6 +119,27 @@ def save_burn_rates(inst_burn_rates, avg_burn_avg, avg_burn_max, filename):
         for time, rate in inst_burn_rates:
             f.write(f"{time:.6f}, {rate:.10f}\n")
 
+def plot_burn_rates(inst_burn_rates, avg_burn_avg, avg_burn_max, output_image='burn_rate_plot.png'):
+    times = [t for t, _ in inst_burn_rates]
+    rates = [r for _, r in inst_burn_rates]
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(times, rates, label="Instantaneous Burn Rate", marker='o', linestyle='-', color='blue')
+
+    # Add average lines
+    plt.axhline(avg_burn_avg, color='green', linestyle='--', label=f"Avg Burn Rate (Avg X): {avg_burn_avg:.4f}")
+    plt.axhline(avg_burn_max, color='red', linestyle='--', label=f"Avg Burn Rate (Max X): {avg_burn_max:.4f}")
+
+    plt.xlabel("Time")
+    plt.ylabel("Burn Rate (dx/dt)")
+    plt.title("Regression (Burn) Rate Over Time")
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig(output_image)
+    plt.show()
+
+
 
 def main():
     results_file = "results.txt"
@@ -126,8 +148,10 @@ def main():
 
     inst_rates, avg_burn_avg, avg_burn_max = calc_reg_rate(times, max_x, avg_x)
     save_burn_rates(inst_rates, avg_burn_max, avg_burn_avg, burn_output_file)
+    plot_burn_rates(inst_rates, avg_burn_avg, avg_burn_max)
 
     print(f"Results saved to {results_file} and {burn_output_file}")
+    print(f"Burn rate plot saved as 'burn_rate_plot.png'")
 
 
 if __name__ == '__main__':

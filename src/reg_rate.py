@@ -120,7 +120,6 @@ def save_burn_rates(inst_burn_rates, avg_burn_avg, avg_burn_max, filename):
 
 
 def main():
-    #run everything
     results_file = "results.txt"
     burn_output_file = "burn_rates.txt"
     times, max_x, avg_x = read_results_file(results_file)

@@ -1,7 +1,9 @@
 import os
 #make folder for x coords
-if not os.path.exists("./eta_coords"):
-    os.makedirs("./eta_coords")
+datadir = "./eta_coords"
+if not os.path.exists(datadir):
+    os.makedirs(datadir)
+
 
 
 for n in range(3):
@@ -121,7 +123,7 @@ for i in range(nStates):
     time_str = f"{time:.3f}"
     e = ExportDBAttributes()
     e .allTimes = 0
-    e.dirname = "./eta_coords"
+    e.dirname =datadir
     e.filename = f"eta_coords_{time_str}"
     e.db_type = "XYZ"
     e.db_type_fullname = ""

@@ -79,7 +79,7 @@ This will:
 
 ## Output Files
 
-*results.txt will be saved to the data directory variable at the top of the xcoords.py script. burn_rates.txt and the corresponding plot will be saved similarly, with the variable at the top of reg_rates.py.
+results.txt will be saved to the data directory variable at the top of the xcoords.py script. burn_rates.txt and the corresponding plot will be saved similarly, with the variable at the top of reg_rates.py.
 
 ### `results.txt`
 

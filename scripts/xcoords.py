@@ -1,3 +1,9 @@
+import os
+#make folder for x coords
+if not os.path.exists("./eta_coords"):
+    os.makedirs("./eta_coords")
+
+
 for n in range(3):
     print('--------------------------------')
 
@@ -100,10 +106,7 @@ SetPlotOptions(ContourAtts)
 DrawPlots()
 
 
-#make folder for x coords
-import os
-if not os.path.exists("./eta_coords"):
-    os.makedirs("./eta_coords")
+
     
 nStates = TimeSliderGetNStates()
 for i in range(nStates):

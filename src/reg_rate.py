@@ -148,7 +148,7 @@ def main():
     times, max_x, avg_x = read_results_file(results_file)
 
     inst_rates, avg_burn_avg, avg_burn_max = calc_reg_rate(times, max_x, avg_x)
-    save_burn_rates(inst_rates, avg_burn_max, avg_burn_avg, burn_output_file)
+    save_burn_rates(inst_rates, avg_burn_avg, avg_burn_max, burn_output_file)
     plot_burn_rates(inst_rates, avg_burn_avg, avg_burn_max)
 
     print(f"Results saved to {results_file} and {burn_output_file}")

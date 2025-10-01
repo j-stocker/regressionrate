@@ -65,6 +65,69 @@ for filename in files:
     append_result_to_file(time_val, max_x, avg_x, output_file)
 #THIS ALL WORKS!!
 
+#make a plot of all the contours 
+def extract_xy_coords(filename):
+    '''Extracts x and y coords from XYZ file and puts them in order by y coord'''
+    x_coords = []
+    y_coords = []
+
+    with open(filename, 'r') as file:
+        for line in file:
+            if line.startswith("UNKNOWN_ATOMIC_ELEMENT"):
+                parts = line.strip().split()
+                if len(parts) >= 3:
+                    try:
+                        x = float(parts[1])
+                        y = float(parts[2])
+                        x_coords.append(x)
+                        y_coords.append(y)
+                    except ValueError:
+                        continue  # Skip lines with invalid float conversion
+    #sort by y coord
+    points = list(zip(x_coords, y_coords))
+    sorted_points = sorted(points, key=lambda p: p[1])
+    x_sorted, y_sorted = zip(*sorted_points)
+    return x_coords, y_coords #if you don't neeed it sorted, just return x_coords, y_coords
+
+
+def contour_plot():
+    plt.figure(figsize=(10, 6))
+    '''pul data from eta_coords (first and second column for x and y)'''
+
+    times_for_color = [] #use to make contour gradient
+    xy_data_list = [] #for plotting later
+
+    for filename in files:
+        filepath = os.path.join(datadir, filename)
+        #get time from filename for labeling
+        try:
+            time_part = filename.replace("eta_coords_","").replace(".xyz","")
+            time_val = float(time_part)
+        except ValueError:
+            print(f"Warning: could not extract time from filename: {filename}")
+            continue
+        x_data, y_data = extract_xy_coords(filepath)
+        if x_data and y_data:
+            times_for_color.append(time_val)
+            xy_data_list.append((x_data, y_data))  
+    norm = plt.Normalize(min(times_for_color), max(times_for_color))
+    cmap = plt.get_cmap('viridis')
+    for (x_data, y_data), time_val in zip(xy_data_list, times_for_color):
+        color = cmap(norm(time_val))
+        plt.scatter(x_data, y_data, color=cmap(norm(time_val)), alpha=0.6, s=1)
+    sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
+    sm.set_array([])
+
+    plt.colorbar(sm, label='Time')
+    plt.xlabel("X Coordinate")
+    plt.ylabel("Y Coordinate")
+    plt.title("Contour Plot of All Time Steps")
+    plt.grid(True)
+    plt.savefig("contour_plot.png")
+    plt.show() #if you don't want to see it, comment this out
+
+        
+
 #now need to read results to calculate regression rate
 #using:
 #overall average x over time
@@ -138,7 +201,7 @@ def plot_burn_rates(inst_burn_rates, avg_burn_avg, avg_burn_max, output_image='b
     plt.grid(True)
     plt.tight_layout()
     plt.savefig(output_image)
-    plt.show(block=False)
+    plt.show() #if you don't want to see it, comment this out
 
 
 
@@ -146,14 +209,18 @@ def main():
     results_file = "results.txt"
     burn_output_file = "burn_rates.txt"
     burn_rate_plot_file = "burn_rate_plot.png"
+    contour_plot_file = "contour_plot.png"
     times, max_x, avg_x = read_results_file(results_file)
 
     inst_rates, avg_burn_avg, avg_burn_max = calc_reg_rate(times, max_x, avg_x)
     save_burn_rates(inst_rates, avg_burn_avg, avg_burn_max, burn_output_file)
     plot_burn_rates(inst_rates, avg_burn_avg, avg_burn_max)
+    contour_plot()
 
     print(f"Results saved to {results_file} and {burn_output_file}")
     print(f"Burn rate plot saved as {burn_rate_plot_file}")
+    print(f"Contour plot saved as {contour_plot_file}")
+
 
 
 if __name__ == '__main__':

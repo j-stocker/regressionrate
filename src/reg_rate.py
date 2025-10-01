@@ -138,13 +138,14 @@ def plot_burn_rates(inst_burn_rates, avg_burn_avg, avg_burn_max, output_image='b
     plt.grid(True)
     plt.tight_layout()
     plt.savefig(output_image)
-    plt.show()
+    plt.show(block=False)
 
 
 
 def main():
     results_file = "results.txt"
     burn_output_file = "burn_rates.txt"
+    burn_rate_plot_file = "burn_rate_plot.png"
     times, max_x, avg_x = read_results_file(results_file)
 
     inst_rates, avg_burn_avg, avg_burn_max = calc_reg_rate(times, max_x, avg_x)
@@ -152,7 +153,7 @@ def main():
     plot_burn_rates(inst_rates, avg_burn_avg, avg_burn_max)
 
     print(f"Results saved to {results_file} and {burn_output_file}")
-    print(f"Burn rate plot saved as 'burn_rate_plot.png'")
+    print(f"Burn rate plot saved as {burn_rate_plot_file}")
 
 
 if __name__ == '__main__':

@@ -36,6 +36,18 @@ All results are saved to `burn_rates.txt`.
 
 ---
 
+### 3. **Contour Plot Generation**
+
+Using the `eta_coords` folder:
+
+*x and y coordinates are pulled from the file for each time step.
+*If using a scatter plot, use the script unchanged. For clean lines, you'll need to edit the output of the extract_xy_coords to be x_sorted and y_sorted and change necessary lines within the contour_plot function.
+*The time steps are represented with a color gradient, as indicated in the legend.
+
+Results are plotted in 'contour_plot.png'.
+
+---
+
 ## Project Structure
 
 ```
@@ -81,7 +93,8 @@ This will:
 
 results.txt will be saved to the data directory variable at the top of the xcoords.py script. burn_rates.txt and the corresponding plot will be saved similarly, with the variable at the top of reg_rates.py.
 
-The plot will be displayed upon running reg_rate.py. Once the plot is closed, messages will display the names of the output files. To disable this and just show the end message, comment out "plt.show()" in line 141.
+The burn rate and contour plots will be displayed upon running reg_rate.py. Once the plots are closed, messages will display the names of the output files. To disable this and just show the end message, comment out "plt.show()" within the functions.
+
 
 ### `results.txt`
 

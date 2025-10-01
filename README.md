@@ -81,6 +81,8 @@ This will:
 
 results.txt will be saved to the data directory variable at the top of the xcoords.py script. burn_rates.txt and the corresponding plot will be saved similarly, with the variable at the top of reg_rates.py.
 
+The plot will be displayed upon running reg_rate.py. Once the plot is closed, messages will display the names of the output files. To disable this and just show the end message, comment out "plt.show()" in line 141.
+
 ### `results.txt`
 
 | Time     | Max_X        | Avg_X        |

@@ -2,7 +2,7 @@ import os
 import csv
 import matplotlib.pyplot as plt
 
-datadir = "./eta_coords"
+datadir = "C:/Users/jenna/code/regressionrate/eta_coords"
 output_file = "results.txt"
 
 def extract_second_column(filename):

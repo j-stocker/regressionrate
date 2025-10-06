@@ -9,7 +9,7 @@ This project automates the visualization and analysis of regression (burn) rates
 
 ### 1. **Visualization Setup in VisIt**
 
-A contour plot of the surface where eta = 0.5 is created and visualized.
+A contour plot of the surface where eta = 0.5 at a valid temperature (i.e., not a void) is created and visualized. 
 
 ### 2. **Data Extraction**
 
@@ -28,7 +28,7 @@ These are saved to `results.txt`.
 
 Using `results.txt`:
 
-* Instantaneous burn rate is calculated via forward difference.
+* Instantaneous burn rate is calculated via central difference.
 * Overall average burn rate is calculated from first and last data points.
 * The average burn rate of the furthest x coordinate is calculated from first and last data points.
 
@@ -79,13 +79,15 @@ This script:
 Once `.xyz` files are generated:
 
 ```bash
-python reg_rate.py
+python reg_rate.py OR reg_rate_radial.py
 ```
 
 This will:
 
-* Generate `results.txt` (max/avg x positions over time)
+* Generate `results.txt` (max/avg x or r positions over time)
 * Generate `burn_rates.txt` with burn rate calculations
+* Use reg_rate.py for standard x-y coordinate systems (burning left to right)
+* Use reg_rate_radial.py for conversion into r distance from center
 
 ---
 
@@ -98,17 +100,17 @@ The burn rate and contour plots will be displayed upon running reg_rate.py. Once
 
 ### `results.txt`
 
-| Time     | Max_X        | Avg_X        |
-| -------- | ------------ | ------------ |
-| 0.000000 | 0.0286306944 | 0.0095451160 |
-| 0.020000 | 0.0426500291 | 0.0156722070 |
-| ...      | ...          | ...          |
+| Time     | Max_X/R        | Avg_X/R        |
+| -------- | ------------   | ------------   |
+| 0.000000 | 0.0286306944   | 0.0095451160   |
+| 0.020000 | 0.0426500291   | 0.0156722070   |
+| ...      | ...            | ...            |
 
 ### `burn_rates.txt`
 
 ```
-Overall Average Burn Rate (Avg X): 1.1964434558
-Overall Average Burn Rate (Max X): 0.6944771942
+Overall Average Burn Rate (Avg X/R): 1.1964434558
+Overall Average Burn Rate (Max X)/R: 0.6944771942
 Time, Instantaneous_Burn_Rate
 0.020000, 1.4019334700
 0.030000, 1.2567777100

@@ -29,22 +29,22 @@ def extract_second_column(filename):
 
     return second_column_values
 
-def extract_fourth_column(filename):
-    '''Extracts fourth column (r values) from XYZ file'''
-    fourth_column_values = []
+def extract_third_column(filename):
+    '''Extracts third column (y values) from XYZ file'''
+    third_column_values = []
 
     with open(filename, 'r') as file:
         for line in file:
             if line.startswith("UNKNOWN_ATOMIC_ELEMENT"):
                 parts = line.strip().split()
-                if len(parts) >= 2:
+                if len(parts) >= 3:
                     try:
-                        value = float(parts[3])
-                        fourth_column_values.append(value)
+                        value = float(parts[2])
+                        third_column_values.append(value)
                     except ValueError:
                         continue  # Skip lines with invalid float conversion
 
-    return fourth_column_values
+    return third_column_values
 
 
 def append_result_to_file(time, max_val, avg_val, output_filename):
@@ -76,11 +76,16 @@ for filename in files:
         print(f"Warning: could not extract time from filename: {filename}")
         continue
 
-    # Extract r values (fourth column)
-    r_data = extract_fourth_column(filepath)
-    if not r_data:
+    # Extract x and y values (second and third column)
+    x_data = extract_second_column(filepath)
+    y_data = extract_third_column(filepath)
+    r_data = []
+
+    if not x_data or not y_data:
         print(f"Warning: No data in file: {filename}")
         continue
+    
+    r_data = [(x**2 + y**2)**(1/2) for x, y in zip(x_data, y_data)]
 
     max_r = max(r_data)
     avg_r = sum(r_data) / len(r_data)
@@ -94,7 +99,6 @@ def extract_xy_coords(filename):
     '''Extracts x and y coords from XYZ file and calculates r'''
     x_coords = []
     y_coords = []
-    r_vals = []
 
     with open(filename, 'r') as file:
         for line in file:
@@ -104,14 +108,12 @@ def extract_xy_coords(filename):
                     try:
                         x = float(parts[1])
                         y = float(parts[2])
-                        r = (x**2 + y**2)**(1/2) #pythagorean theorem, calculate r at each time step
                         x_coords.append(x)
                         y_coords.append(y)
-                        r_vals.append(r)
+                        
                     except ValueError:
                         continue  # Skip lines with invalid float conversion
-    return x_coords, y_coords, r_vals 
-
+    return x_coords, y_coords
 
 
 def contour_plot():
@@ -130,7 +132,7 @@ def contour_plot():
         except ValueError:
             print(f"Warning: could not extract time from filename: {filename}")
             continue
-        x_data, y_data, _ = extract_xy_coords(filepath)
+        x_data, y_data = extract_xy_coords(filepath)
         if x_data and y_data:
             times_for_color.append(time_val)
             xy_data_list.append((x_data, y_data))  
@@ -194,7 +196,7 @@ def calc_reg_rate(times, max_r, avg_r):
             dr_max = max_r[i] - max_r[i-1]
         else: #central dif in the middle
             dt = times[i+1] - times[i-1]
-            dx_max = max_r[i+1] - max_r[i-1]
+            dr_max = max_r[i+1] - max_r[i-1]
         burn_rate = dr_max / dt
         inst_burn_rates.append((times[i], burn_rate))
 
@@ -223,8 +225,8 @@ def plot_burn_rates(inst_burn_rates, avg_burn_avg, avg_burn_max, output_image='b
     plt.plot(times, rates, label="Instantaneous Burn Rate", marker='o', linestyle='-', color='blue')
 
     # Add average lines
-    plt.axhline(avg_burn_avg, color='green', linestyle='--', label=f"Avg Burn Rate (Avg X): {avg_burn_avg:.4f}")
-    plt.axhline(avg_burn_max, color='red', linestyle='--', label=f"Avg Burn Rate (Max X): {avg_burn_max:.4f}")
+    plt.axhline(avg_burn_avg, color='green', linestyle='--', label=f"Avg Burn Rate (Avg R): {avg_burn_avg:.4f}")
+    plt.axhline(avg_burn_max, color='red', linestyle='--', label=f"Avg Burn Rate (Max R): {avg_burn_max:.4f}")
 
     plt.xlabel("Time")
     plt.ylabel("Burn Rate (dr/dt)")

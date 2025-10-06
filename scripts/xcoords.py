@@ -13,14 +13,15 @@ DeleteAllPlots()
 AddPlot("Contour", "eta", 1, 1)
 
 #keep only where nonzero temperature (i.e., where there isn't a void)
-
+#this does NOT work
+'''
 AddOperator("Threshold")
 ThresholdAtts = ThresholdAttributes()
 ThresholdAtts.listedVarNames = ("temperature",)
 ThresholdAtts.lowerBounds = (1.0,)
 ThresholdAtts.upperBounds = (1e37,)
 SetOperatorOptions(ThresholdAtts)
-
+'''
 ContourAtts = ContourAttributes()
 ContourAtts.defaultPalette.SetNumControlPoints(30)
 ContourAtts.defaultPalette.GetControlPoints(0).colors = (255, 0, 0, 255)

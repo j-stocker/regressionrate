@@ -51,11 +51,10 @@ Results are plotted in 'contour_plot.png'.
 ## Project Structure
 
 ```
-├── eta_coords/              # Exported XYZ files (one per time step)
-├── results.txt              # Time vs Max/Avg X values
-├── burn_rates.txt           # Final regression rate results
-├── export_eta_data.py       # VisIt script to generate plots & export data
-├── analyze_regression.py    # Python script for post-processing
+├── eta_coords/                             # Exported XYZ files (one per time step)
+├── results.txt                             # Time vs Max/Avg X or R values
+├── reg_rate.py or reg_rate_radial.py       #Calculate regression rate and create plots
+├── burn_rates.txt                          # Final regression rate results
 └── README.md
 ```
 
@@ -109,8 +108,8 @@ The burn rate and contour plots will be displayed upon running reg_rate.py. Once
 ### `burn_rates.txt`
 
 ```
-Overall Average Burn Rate (Avg X/R): 1.1964434558
-Overall Average Burn Rate (Max X)/R: 0.6944771942
+Overall Average Burn Rate (Avg X or R): 1.1964434558
+Overall Average Burn Rate (Max X or R): 0.6944771942
 Time, Instantaneous_Burn_Rate
 0.020000, 1.4019334700
 0.030000, 1.2567777100

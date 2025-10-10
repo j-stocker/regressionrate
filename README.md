@@ -9,7 +9,7 @@ This project automates the visualization and analysis of regression (burn) rates
 
 ### 1. **Visualization Setup in VisIt**
 
-A contour plot of the surface where eta = 0.5 at a valid temperature (i.e., not a void) is created and visualized. 
+A contour plot of the surface where eta = 0.5 is created and visualized. The xcoords.py allows you to select a minimum temperature for which to create the eta contour.
 
 ### 2. **Data Extraction**
 

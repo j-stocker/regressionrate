@@ -4,7 +4,7 @@ datadir = "./eta_coords"
 if not os.path.exists(datadir):
     os.makedirs(datadir)
 
-
+min_temp = 500 #change as desired
 
 for n in range(3):
     print('--------------------------------')
@@ -17,7 +17,7 @@ SetPlotOptions(ContourAtts)
 AddOperator("Threshold", 1)
 ThresholdAtts = ThresholdAttributes()
 ThresholdAtts.listedVarNames = ("default", "temp")
-ThresholdAtts.lowerBounds = (-1e+37, min_temp)\
+ThresholdAtts.lowerBounds = (-1e+37, min_temp)
 ThresholdAtts.upperBounds = (1e+37, 1e+37)
 DrawPlots()
 

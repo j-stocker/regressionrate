@@ -78,7 +78,7 @@ This script:
 Once `.xyz` files are generated:
 
 ```bash
-python reg_rate.py OR reg_rate_radial.py
+python reg_rate_x.py OR reg_rate_y.py OR reg_rate_radial.py
 ```
 
 This will:

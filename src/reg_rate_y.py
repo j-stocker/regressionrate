@@ -53,7 +53,7 @@ for filename in files:
         continue
 
     # Extract X coordinates (second column)
-    x_data = extract_second_column(filepath)
+    x_data = extract_third_column(filepath)
     if not x_data:
         print(f"Warning: No data in file: {filename}")
         continue

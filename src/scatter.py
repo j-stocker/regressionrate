@@ -1,5 +1,6 @@
 import os
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 import numpy as np
 def scatter_burn_rates():
     #all folders are within the main folder, named accordingly
@@ -37,15 +38,16 @@ def scatter_burn_rates():
 
     plt.figure(figsize=(12, 6))
     plt.scatter(x, h_vals, color='blue', label='Horizontal Burn', marker='o')
-    plt.plot(x, h_vals, color='blue', linestyle='-', alpha=0.5)
     plt.scatter(x, v_vals, color='red', label='Vertical', marker='*')
-    plt.plot(x, v_vals, color='red', linestyle='-', alpha=0.5)
+    
 
     plt.xticks(x, subsets)
     plt.xlabel('Image Subset')
     plt.ylabel('Burn Rate')
     plt.title('Horizontal and Vertical Burn Rates for Images 25-28')
     plt.legend()
+    plt.plot(x, h_vals, color='blue', linestyle='-', alpha=0.5)
+    plt.plot(x, v_vals, color='red', linestyle='-', alpha=0.5)
     plt.grid(True)
     plt.tight_layout()
     plt.show()
@@ -57,14 +59,20 @@ def scatter_burn_rates():
     
     #one color per subset
     for i, subset in enumerate(subsets):
-        dataset_index = i//2
-        color = colors[dataset_index % len(colors)]
+        subset_name = subsets[i]
+        color = colors[i]
         plt.scatter(h_vals[i], v_vals[i], color=color, marker='o')
         plt.scatter(v_vals[i], h_vals[i], color=color, marker='*')
     plt.xlabel('Horizontal Burn Rate')
     plt.ylabel('Vertical Burn Rate')
     plt.title('Horizontal vs Vertical Burn Rates for Images 25-28')
-    plt.legend()
+    #make legend, 12 colors
+    patches = []
+    for i, subset in enumerate(subsets):
+        color = colors[i]
+        patch = mpatches.Patch(color=color, label=subset)
+        patches.append(patch)
+    plt.legend(handles=patches, bbox_to_anchor=(1.05, 1), loc='upper left')
     plt.grid(True)
     plt.tight_layout()
     plt.show()

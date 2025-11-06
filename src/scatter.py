@@ -4,10 +4,10 @@ import matplotlib.patches as mpatches
 import numpy as np
 def scatter_burn_rates():
     #all folders are within the main folder, named accordingly
-    subsets = ['25h1, 25v1, 25h2, 25v2', '25h3', '25v3',
-           '26h1, 26v1, 26h2, 26v2', '26h3', '26v3',
-           '27h1, 27v1, 27h2, 27v2', '27h3', '27v3',
-           '28h1, 28v1, 28h2, 28v2', '28h3', '28v3',]
+    subsets = ['1h1, 1v1, 1h2, 1v2', '1h3', '1v3',
+           '2h1, 2v1, 2h2, 2v2', '2h3', '2v3',
+           '3h1, 3v1, 3h2, 3v2', '3h3', '3v3',
+           '4h1, 4v1, 4h2, 4v2', '4h3', '4v3',]
     #12 colors, for 24 subfolders
     colors = 'maroon', 'red', 'salmon', 'darkgreen', 'limegreen', 'lime', 'mediumblue', 'royalblue', 'skyblue', 'indigo', 'blueviolet', 'violet'
 
@@ -17,18 +17,18 @@ def scatter_burn_rates():
     #need to have horiz and vert for each subset on one line
 
     data = {
-        '25-1': (burn_rates[0], burn_rates[1]),
-        '25-2': (burn_rates[2], burn_rates[3]),
-        '25-3': (burn_rates[4], burn_rates[5]),
-        '26-1': (burn_rates[6], burn_rates[7]),
-        '26-2': (burn_rates[8], burn_rates[9]), 
-        '26-3': (burn_rates[10], burn_rates[11]),
-        '27-1': (burn_rates[12], burn_rates[13]),
-        '27-2': (burn_rates[14], burn_rates[15]),
-        '27-3': (burn_rates[16], burn_rates[17]),
-        '28-1': (burn_rates[18], burn_rates[19]),
-        '28-2': (burn_rates[20], burn_rates[21]),
-        '28-3': (burn_rates[22], burn_rates[23]),
+        '1-1': (burn_rates[0], burn_rates[1]),
+        '1-2': (burn_rates[2], burn_rates[3]),
+        '1-3': (burn_rates[4], burn_rates[5]),
+        '2-1': (burn_rates[6], burn_rates[7]),
+        '2-2': (burn_rates[8], burn_rates[9]), 
+        '2-3': (burn_rates[10], burn_rates[11]),
+        '3-1': (burn_rates[12], burn_rates[13]),
+        '3-2': (burn_rates[14], burn_rates[15]),
+        '3-3': (burn_rates[16], burn_rates[17]),
+        '4-1': (burn_rates[18], burn_rates[19]),
+        '4-2': (burn_rates[20], burn_rates[21]),
+        '4-3': (burn_rates[22], burn_rates[23]),
     }
 
     subsets = list(data.keys())
@@ -44,7 +44,7 @@ def scatter_burn_rates():
     plt.xticks(x, subsets)
     plt.xlabel('Image Subset')
     plt.ylabel('Burn Rate')
-    plt.title('Horizontal and Vertical Burn Rates for Images 25-28')
+    plt.title('Horizontal and Vertical Burn Rates for Images 1-4')
     plt.legend()
     plt.plot(x, h_vals, color='blue', linestyle='-', alpha=0.5)
     plt.plot(x, v_vals, color='red', linestyle='-', alpha=0.5)
@@ -65,7 +65,7 @@ def scatter_burn_rates():
         plt.scatter(v_vals[i], h_vals[i], color=color, marker='*')
     plt.xlabel('Horizontal Burn Rate')
     plt.ylabel('Vertical Burn Rate')
-    plt.title('Horizontal vs Vertical Burn Rates for Images 25-28')
+    plt.title('Burn Rates: Horizontal vs Vertical Correlation')
     #make legend, 12 colors
     patches = []
     for i, subset in enumerate(subsets):

@@ -1,7 +1,9 @@
 import os
+from matplotlib import markers
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import numpy as np
+from matplotlib.lines import Line2D
 def scatter_burn_rates():
     #all folders are within the main folder, named accordingly
     subsets = ['1h1, 1v1, 1h2, 1v2', '1h3', '1v3',
@@ -12,7 +14,8 @@ def scatter_burn_rates():
     colors = 'maroon', 'red', 'salmon', 'darkgreen', 'limegreen', 'lime', 'mediumblue', 'royalblue', 'skyblue', 'indigo', 'blueviolet', 'violet'
 
     #going to just do this bit manually for now, just needs to be length 24
-    burn_rates = np.linspace(1, 24, 24)
+    burn_rates = np.random.uniform(1, 24, 24)
+    # burn_rates = np.linspace(1, 24, 24)
     #plotting with specimen on x-axis
     #need to have horiz and vert for each subset on one line
 
@@ -38,7 +41,7 @@ def scatter_burn_rates():
 
     plt.figure(figsize=(12, 6))
     plt.scatter(x, h_vals, color='blue', label='Horizontal Burn', marker='o')
-    plt.scatter(x, v_vals, color='red', label='Vertical', marker='*')
+    plt.scatter(x, v_vals, color='red', label='Vertical Burn', marker='*')
     
 
     plt.xticks(x, subsets)
@@ -66,13 +69,29 @@ def scatter_burn_rates():
     plt.xlabel('Horizontal Burn Rate')
     plt.ylabel('Vertical Burn Rate')
     plt.title('Burn Rates: Horizontal vs Vertical Correlation')
+    #draw lines between for horizontal and vertical
+    #need to sort h_vals and v_vals to make lines look better
+    combined = list(zip(h_vals, v_vals))
+    combined_sorted = sorted(combined, key=lambda x: x[0])
+    h_vals_sorted, v_vals_sorted = zip(*combined_sorted)
+    plt.plot(h_vals_sorted, v_vals_sorted, color='blue', linestyle='-', alpha=0.25)
+    combined = list(zip(v_vals, h_vals))
+    combined_sorted = sorted(combined, key=lambda x: x[0])
+    v_vals_sorted, h_vals_sorted = zip(*combined_sorted)
+    plt.plot(v_vals_sorted, h_vals_sorted, color='red', linestyle='-', alpha=0.25)
     #make legend, 12 colors
     patches = []
     for i, subset in enumerate(subsets):
         color = colors[i]
         patch = mpatches.Patch(color=color, label=subset)
         patches.append(patch)
-    plt.legend(handles=patches, bbox_to_anchor=(1.05, 1), loc='upper left')
+    #plt.legend(handles=patches, bbox_to_anchor=(1.05, 1), loc='upper left')
+    color_legend = plt.legend(handles=patches, loc='right', title='Subset')
+    marker_legend = [
+        Line2D([0], [0], marker='o', color='blue', linestyle='None', label='Horizontal'),
+    Line2D([0], [0], marker='*', color='red', linestyle='None', label='Vertical'),]
+    plt.gca().add_artist(color_legend)
+    plt.legend(handles=marker_legend, loc='lower right', title='Burn Direction')
     plt.grid(True)
     plt.tight_layout()
     plt.show()

@@ -17,7 +17,7 @@ if not os.path.exists(db_path):
     print("ERROR: Could not find celloutput.visit at:")
     print("   " + db_path)
     sys.exit(1)
-visit
+
 print(f"Opening database: {db_path}")
 OpenDatabase(db_path, 0)
 

@@ -86,8 +86,13 @@ This script:
 Once `.xyz` files are generated:
 
 ```bash
-python reg_rate_x.py OR reg_rate_y.py OR reg_rate_radial.py
+./path/to/reg_rate_x.py ./path/to/eta_coords_dir/eta_coords/
 ```
+Same usage for `reg_rate_y.py` and `reg_rate_radial.py`
+
+ex:
+
+`./research/regressionrate/src/reg_rate_x.py ./results/amazing_research/eta_coords`
 
 This will:
 

@@ -1,5 +1,26 @@
 import os
+import sys
 #make folder for x coords
+
+default_db = "celloutput.visit"
+
+if len(sys.argv) > 1:
+    db_path = sys.argv[1]
+    if not db_path.endswith(default_db):
+        db_path = os.path.join(db_path, default_db)
+else:
+    db_path = os.path.join(os.getcwd(), default_db)
+
+db_path = os.path.abspath(db_path)
+
+if not os.path.exists(db_path):
+    print("ERROR: Could not find celloutput.visit at:")
+    print("   " + db_path)
+    sys.exit(1)
+
+print(f"Opening database: {db_path}")
+OpenDatabase(db_path, 0)
+
 datadir = "./eta_coords"
 if not os.path.exists(datadir):
     os.makedirs(datadir)
@@ -42,3 +63,4 @@ for i in range(nStates):
     e.variables = ("eta",)
     ExportDatabase(e)
 
+sys.exit(0)

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import os
 import csv
 import sys
@@ -102,7 +104,7 @@ def contour_plot():
     times_for_color = [] #use to make contour gradient
     xy_data_list = [] #for plotting later
 
-    for filename in files:
+    for filename in files[::1]:
         filepath = os.path.join(datadir, filename)
         #get time from filename for labeling
         try:
@@ -116,10 +118,10 @@ def contour_plot():
             times_for_color.append(time_val)
             xy_data_list.append((x_data, y_data))  
     norm = plt.Normalize(min(times_for_color), max(times_for_color))
-    cmap = plt.get_cmap('viridis')
+    cmap = plt.get_cmap('inferno')
     for (x_data, y_data), time_val in zip(xy_data_list, times_for_color):
         color = cmap(norm(time_val))
-        plt.scatter(x_data, y_data, color=cmap(norm(time_val)), alpha=0.6, s=1)
+        plt.scatter(x_data, y_data, color=cmap(norm(time_val)), alpha=1.0, s=1)
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
     sm.set_array([])
 

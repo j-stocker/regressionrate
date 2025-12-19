@@ -17,7 +17,7 @@ if not os.path.exists(db_path):
     print("ERROR: Could not find celloutput.visit at:")
     print("   " + db_path)
     sys.exit(1)
-
+visit
 print(f"Opening database: {db_path}")
 OpenDatabase(db_path, 0)
 
@@ -25,21 +25,32 @@ datadir = "./eta_coords"
 if not os.path.exists(datadir):
     os.makedirs(datadir)
 
-min_temp = 300 #change as desired
+min_temp = 400.0 #change as desired
 
 for n in range(3):
     print('--------------------------------')
 
 DeleteAllPlots()
+
+# Add contour plot
 AddPlot("Contour", "eta", 1, 1)
 ContourAtts = ContourAttributes()
-ContourAtts.contourValue = (0.5)
+ContourAtts.contourMethod = ContourAtts.Value  # Explicitly set method
+ContourAtts.contourValue = (0.5,)  # Must be a tuple with trailing comma
+ContourAtts.minFlag = 0
+ContourAtts.maxFlag = 0
 SetPlotOptions(ContourAtts)
+
+# Add threshold operator
 AddOperator("Threshold", 1)
 ThresholdAtts = ThresholdAttributes()
-ThresholdAtts.listedVarNames = ("default", "temp")
-ThresholdAtts.lowerBounds = (-1e+37, min_temp)
-ThresholdAtts.upperBounds = (1e+37, 1e+37)
+ThresholdAtts.outputMeshType = 0  # 0 for original mesh type
+ThresholdAtts.listedVarNames = ("temp",)  # Only list the variable you're thresholding
+ThresholdAtts.lowerBounds = (min_temp,)  # Must be tuple
+ThresholdAtts.upperBounds = (1e+37,)  # Must be tuple
+ThresholdAtts.zonePortions = (1,)  # Include zones where condition is met
+SetOperatorOptions(ThresholdAtts, 1)
+
 DrawPlots()
 
     

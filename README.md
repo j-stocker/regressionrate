@@ -67,6 +67,14 @@ Results are plotted in 'contour_plot.png'.
 Run the VisIt script (`xcoords.py`) from within the VisIt GUI or CLI.
 (Copy and paste into the Command window.)
 
+`visit -cli -np 8 -nowin -s ./regressionrate/scripts/xcoords.py ./path/to/celloutput.visit_directory`
+
+ex:
+
+
+`visit -cli -np 8 -nowin -s .path/to/regressionrate/scripts/xcoords.py /research/amazing_results/`
+Where the `celloutput.visit` file is in the `amazing_results` folder
+
 This script:
 
 * Adds a contour plot of the `eta` variable

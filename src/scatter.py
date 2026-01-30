@@ -98,5 +98,10 @@ def scatter_burn_rates():
     #save the figure
     plt.savefig('burn_rates_scatter2.png')
 
-while __name__ == '__main__':
+def main():
     scatter_burn_rates()
+    print('Figures saved.')
+
+
+if __name__ == '__main__':
+    main()

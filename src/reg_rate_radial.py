@@ -1,8 +1,15 @@
+#!/usr/bin/env python
+
 import os
 import csv
 import matplotlib.pyplot as plt
+import sys
 
-datadir = "./eta_coords"
+if len(sys.argv) < 2:
+    print("Usage: python script.py <data_directory>")
+    sys.exit(1)
+
+datadir = sys.argv[1]
 output_file = "results.txt"
 
 #assumes centered on x/y axes, change to wherever your origin is locatied

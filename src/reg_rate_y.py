@@ -1,8 +1,15 @@
+#!/usr/bin/env python
+
 import os
 import csv
 import matplotlib.pyplot as plt
+import sys
 
-datadir = "C:/Users/jenna/code/regressionrate/eta_coords"
+if len(sys.argv) < 2:
+    print("Usage: python script.py <data_directory>")
+    sys.exit(1)
+
+datadir = sys.argv[1]
 output_file = "results.txt"
 
 def extract_third_column(filename):

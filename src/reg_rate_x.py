@@ -1,7 +1,8 @@
 import os
 import csv
 import matplotlib.pyplot as plt
-
+import numpy as np
+from scipy.optimize import griddata
 datadir = "C:/Users/jenna/code/regressionrate/eta_coords"
 output_file = "results.txt"
 
@@ -126,7 +127,60 @@ def contour_plot():
     plt.savefig("contour_plot.png")
     plt.show() #if you don't want to see it, comment this out
 
-        
+def contourf_plot():
+    plt.figure(figsize=(10, 6))
+
+    all_x = []
+    all_y = []
+    all_t = []
+
+    for filename in files:
+        filepath = os.path.join(datadir, filename)
+
+        # extract time from filename
+        try:
+            time_part = filename.replace("eta_coords_", "").replace(".xyz", "")
+            time_val = float(time_part)
+        except ValueError:
+            print(f"Warning: could not extract time from filename: {filename}")
+            continue
+
+        x_data, y_data = extract_xy_coords(filepath)
+
+        if x_data and y_data:
+            all_x.extend(x_data)
+            all_y.extend(y_data)
+            all_t.extend([time_val] * len(x_data))
+
+    # convert to numpy arrays
+    all_x = np.array(all_x)
+    all_y = np.array(all_y)
+    all_t = np.array(all_t)
+
+    # create grid
+    xi = np.linspace(all_x.min(), all_x.max(), 400)
+    yi = np.linspace(all_y.min(), all_y.max(), 400)
+    Xi, Yi = np.meshgrid(xi, yi)
+
+    # interpolate time onto grid
+    Ti = griddata(
+        points=(all_x, all_y),
+        values=all_t,
+        xi=(Xi, Yi),
+        method='linear'
+    )
+
+    # contour plot
+    contour = plt.contourf(Xi, Yi, Ti, levels=100, cmap='inferno')
+
+    plt.colorbar(contour, label='Time')
+    plt.xlabel("X Coordinate")
+    plt.ylabel("Y Coordinate")
+    plt.title("Contour Plot of All Time Steps")
+    plt.grid(True)
+
+    plt.savefig("contour_plot.png", dpi=300)
+    plt.show()
 
 #now need to read results to calculate regression rate
 #using:
@@ -223,7 +277,7 @@ def main():
     inst_rates, avg_burn_avg, avg_burn_max = calc_reg_rate(times, max_x, avg_x)
     save_burn_rates(inst_rates, avg_burn_avg, avg_burn_max, burn_output_file)
     plot_burn_rates(inst_rates, avg_burn_avg, avg_burn_max)
-    contour_plot()
+    contourf_plot()
 
     print(f"Results saved to {results_file} and {burn_output_file}")
     print(f"Burn rate plot saved as {burn_rate_plot_file}")

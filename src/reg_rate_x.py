@@ -4,12 +4,9 @@ import os
 import csv
 import sys
 import matplotlib.pyplot as plt
-
-if len(sys.argv) < 2:
-    print("Usage: python script.py <data_directory>")
-    sys.exit(1)
-
-datadir = sys.argv[1]
+import numpy as np
+from scipy.optimize import griddata
+datadir = "C:/Users/jenna/code/regressionrate/eta_coords"
 output_file = "results.txt"
 
 def extract_second_column(filename):
@@ -133,7 +130,84 @@ def contour_plot():
     plt.savefig("contour_plot.png")
     plt.show() #if you don't want to see it, comment this out
 
-        
+def contourf_plot(files, datadir):
+    plt.figure(figsize=(10, 6))
+
+    all_x = []
+    all_y = []
+    all_t = []
+
+    for filename in files:
+        filepath = os.path.join(datadir, filename)
+
+        # extract time from filename
+        try:
+            time_part = filename.replace("eta_coords_", "").replace(".xyz", "")
+            time_val = float(time_part)
+        except ValueError:
+            print(f"Warning: could not extract time from filename: {filename}")
+            continue
+
+        x_data, y_data = extract_xy_coords(filepath)
+
+        if x_data is None or y_data is None:
+            continue
+        if len(x_data) == 0:
+            continue
+
+        all_x.extend(x_data)
+        all_y.extend(y_data)
+        all_t.extend([time_val] * len(x_data))
+
+    if len(all_x) == 0:
+        raise RuntimeError("No valid data found for contour plot.")
+
+    # convert to numpy arrays
+    all_x = np.asarray(all_x)
+    all_y = np.asarray(all_y)
+    all_t = np.asarray(all_t)
+
+    # remove duplicate (x, y) points
+    pts = np.column_stack((all_x, all_y))
+    pts_unique, idx = np.unique(pts, axis=0, return_index=True)
+    all_x = pts_unique[:, 0]
+    all_y = pts_unique[:, 1]
+    all_t = all_t[idx]
+
+    # create grid
+    xi = np.linspace(all_x.min(), all_x.max(), 400)
+    yi = np.linspace(all_y.min(), all_y.max(), 400)
+    Xi, Yi = np.meshgrid(xi, yi)
+
+    # interpolate time onto grid
+    Ti = griddata(
+        points=(all_x, all_y),
+        values=all_t,
+        xi=(Xi, Yi),
+        method="linear"
+    )
+
+    # fallback for NaNs (very common)
+    if np.isnan(Ti).any():
+        Ti_nearest = griddata(
+            points=(all_x, all_y),
+            values=all_t,
+            xi=(Xi, Yi),
+            method="nearest"
+        )
+        Ti = np.where(np.isnan(Ti), Ti_nearest, Ti)
+
+    # contour plot
+    contour = plt.contourf(Xi, Yi, Ti, levels=100, cmap="plasma")
+    plt.colorbar(contour, label="Time")
+
+    plt.xlabel("X Coordinate")
+    plt.ylabel("Y Coordinate")
+    plt.title("Contour Plot of All Time Steps")
+    plt.axis("equal")
+    plt.tight_layout()
+    plt.savefig("contour_plot.png", dpi=300)
+    plt.show()
 
 #now need to read results to calculate regression rate
 #using:
@@ -241,7 +315,7 @@ def main():
     inst_rates, avg_burn_avg, avg_burn_max = calc_reg_rate(times, max_x, avg_x)
     save_burn_rates(inst_rates, avg_burn_avg, avg_burn_max, burn_output_file)
     plot_burn_rates(inst_rates, avg_burn_avg, avg_burn_max)
-    contour_plot()
+    contourf_plot()
 
     print(f"Results saved to {results_file} and {burn_output_file}")
     print(f"Burn rate plot saved as {burn_rate_plot_file}")

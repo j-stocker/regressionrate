@@ -181,9 +181,9 @@ def calc_reg_rate(times, max_x, avg_x):
         burn_rate = dx_max / dt
         inst_burn_rates.append((times[i], burn_rate))
 
-        if i > 3 and sum(x[1] for x in inst_burn_rates[i-2:i]) < 1e-6:
-            inst_burn_rates[i-2:] = []
-            times[i-2:] = []
+        if i > 3 and sum(x[1] for x in inst_burn_rates[i-4:i]) < 1e-6:
+            inst_burn_rates[i-4:] = []
+            times[i-4:] = []
             break
 
     #average burn rate, overall

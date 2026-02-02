@@ -130,7 +130,7 @@ def contour_plot():
     plt.savefig("contour_plot.png")
     plt.show() #if you don't want to see it, comment this out
 
-def contourf_plot():
+def contourf_plot(files, datadir):
     plt.figure(figsize=(10, 6))
 
     all_x = []
@@ -150,15 +150,29 @@ def contourf_plot():
 
         x_data, y_data = extract_xy_coords(filepath)
 
-        if x_data and y_data:
-            all_x.extend(x_data)
-            all_y.extend(y_data)
-            all_t.extend([time_val] * len(x_data))
+        if x_data is None or y_data is None:
+            continue
+        if len(x_data) == 0:
+            continue
+
+        all_x.extend(x_data)
+        all_y.extend(y_data)
+        all_t.extend([time_val] * len(x_data))
+
+    if len(all_x) == 0:
+        raise RuntimeError("No valid data found for contour plot.")
 
     # convert to numpy arrays
-    all_x = np.array(all_x)
-    all_y = np.array(all_y)
-    all_t = np.array(all_t)
+    all_x = np.asarray(all_x)
+    all_y = np.asarray(all_y)
+    all_t = np.asarray(all_t)
+
+    # remove duplicate (x, y) points
+    pts = np.column_stack((all_x, all_y))
+    pts_unique, idx = np.unique(pts, axis=0, return_index=True)
+    all_x = pts_unique[:, 0]
+    all_y = pts_unique[:, 1]
+    all_t = all_t[idx]
 
     # create grid
     xi = np.linspace(all_x.min(), all_x.max(), 400)
@@ -170,18 +184,28 @@ def contourf_plot():
         points=(all_x, all_y),
         values=all_t,
         xi=(Xi, Yi),
-        method='linear'
+        method="linear"
     )
 
-    # contour plot
-    contour = plt.contourf(Xi, Yi, Ti, levels=100, cmap='inferno')
+    # fallback for NaNs (very common)
+    if np.isnan(Ti).any():
+        Ti_nearest = griddata(
+            points=(all_x, all_y),
+            values=all_t,
+            xi=(Xi, Yi),
+            method="nearest"
+        )
+        Ti = np.where(np.isnan(Ti), Ti_nearest, Ti)
 
-    plt.colorbar(contour, label='Time')
+    # contour plot
+    contour = plt.contourf(Xi, Yi, Ti, levels=100, cmap="plasma")
+    plt.colorbar(contour, label="Time")
+
     plt.xlabel("X Coordinate")
     plt.ylabel("Y Coordinate")
     plt.title("Contour Plot of All Time Steps")
-    plt.grid(True)
-
+    plt.axis("equal")
+    plt.tight_layout()
     plt.savefig("contour_plot.png", dpi=300)
     plt.show()
 

@@ -226,7 +226,7 @@ def read_results_file(filename):
         reader = csv.reader(f)
         next(reader)  # Skip header
         for row in reader:
-            if len(row) == 3:
+            if len(row) == 3: # and float(row[0]) < 0.316:
                 try:
                     times.append(float(row[0]))
                     max_xs.append(float(row[1]))
@@ -255,6 +255,11 @@ def calc_reg_rate(times, max_x, avg_x):
         burn_rate = dx_max / dt
         inst_burn_rates.append((times[i], burn_rate))
 
+        if i > 3 and sum(x[1] for x in inst_burn_rates[i-4:i]) < 1e-6:
+            inst_burn_rates[i-4:] = []
+            times[i-4:] = []
+            break
+
     #average burn rate, overall
     total_time = times[-1] - times[0]
     avg_burn_avg = (avg_x[-1] - avg_x[0]) / (total_time)
@@ -278,6 +283,12 @@ def plot_burn_rates(inst_burn_rates, avg_burn_avg, avg_burn_max, output_image='b
 
     plt.figure(figsize=(10, 6))
     plt.plot(times, rates, label="Instantaneous Burn Rate", marker='o', linestyle='-', color='blue')
+
+    import numpy as np
+    window_size = 10
+    window = np.ones(window_size) / window_size
+    rates_avg = np.convolve(rates, window, mode='same')
+    plt.plot(times, rates_avg, label=f"Moving Avg burn Rate, Win=:{window_size}", marker = '.', linestyle='-', color='black')
 
     # Add average lines
     plt.axhline(avg_burn_avg, color='green', linestyle='--', label=f"Avg Burn Rate (Avg X): {avg_burn_avg:.4f}")

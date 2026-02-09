@@ -64,7 +64,7 @@ for i in range(nStates):
     Query("Time")
     time = GetQueryOutputValue()
     #format time for filename
-    time_str = f"{time:.3f}"
+    time_str = f"{time:.6f}"
     e = ExportDBAttributes()
     e .allTimes = 0
     e.dirname =datadir

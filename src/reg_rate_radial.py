@@ -159,7 +159,7 @@ def contour_plot():
     plt.savefig("contour_plot.png")
     plt.show() #if you don't want to see it, comment this out
 
-def contourf_plot(files, datadir):
+def contourf_plot():
     plt.figure(figsize=(10, 6))
 
     all_x = []

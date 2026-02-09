@@ -5,7 +5,7 @@ import csv
 import matplotlib.pyplot as plt
 import sys
 import numpy as np
-from scipy.optimize import griddata
+from scipy.interpolate import griddata
 
 if len(sys.argv) < 2:
     print("Usage: python script.py <data_directory>")

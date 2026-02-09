@@ -5,8 +5,8 @@ import csv
 import sys
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.optimize import griddata
-datadir = "C:/Users/jenna/code/regressionrate/eta_coords"
+from scipy.interpolate import griddata
+datadir = sys.argv[1]
 output_file = "results.txt"
 
 def extract_second_column(filename):
@@ -315,7 +315,7 @@ def main():
     inst_rates, avg_burn_avg, avg_burn_max = calc_reg_rate(times, max_x, avg_x)
     save_burn_rates(inst_rates, avg_burn_avg, avg_burn_max, burn_output_file)
     plot_burn_rates(inst_rates, avg_burn_avg, avg_burn_max)
-    contourf_plot()
+    contourf_plot(files, sys.argv[1])
 
     print(f"Results saved to {results_file} and {burn_output_file}")
     print(f"Burn rate plot saved as {burn_rate_plot_file}")

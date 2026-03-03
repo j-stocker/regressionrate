@@ -159,7 +159,7 @@ def contour_plot():
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
     sm.set_array([])
 
-    plt.colorbar(sm, label='Time')
+    # plt.colorbar(sm, label='Time')
     plt.xlabel("X Coordinate")
     plt.ylabel("Y Coordinate")
     plt.title("Contour Plot of All Time Steps")

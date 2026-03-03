@@ -15,8 +15,8 @@ datadir = sys.argv[1]
 output_file = "results.txt"
 
 #assumes centered on x/y axes, change to wherever your origin is locatied
-central_x_coord = 0
-central_y_coord = 0
+#central_x_coord = 0
+#central_y_coord = 0
 
 #functions similar to reg_rate.py, but for circular 2D regression
 
@@ -72,6 +72,12 @@ files = sorted([
 with open(output_file, 'w') as f:
     f.write("Time, Max_r, Avg_r\n")
 
+#Calculate centroid from first file, NOT (0,0)
+first_file = os.path.join(datadir, files[0])
+all_x = extract_second_column(first_file)
+all_y = extract_third_column(first_file)
+central_x_coord = sum(all_x) / len(all_x)
+central_y_coord = sum(all_y) / len(all_y)
 # Loop over each file
 for filename in files:
     filepath = os.path.join(datadir, filename)
@@ -94,7 +100,7 @@ for filename in files:
         print(f"Warning: No data in file: {filename}")
         continue
     
-    r_data = [(x**2 + y**2)**(1/2) for x, y in zip(x_data, y_data)]
+    r_data = [((x - central_x_coord)**2 + (y - central_y_coord)**2)**(1/2) for x, y in zip(x_data, y_data)]
 
     max_r = max(r_data)
     avg_r = sum(r_data) / len(r_data)
@@ -161,7 +167,7 @@ def contour_plot():
     plt.savefig("contour_plot.png")
     plt.show() #if you don't want to see it, comment this out
 
-def contourf_plot(files, datadir):
+def contourf_plot():
     plt.figure(figsize=(10, 6))
 
     all_x = []
@@ -215,7 +221,7 @@ def contourf_plot(files, datadir):
         points=(all_x, all_y),
         values=all_t,
         xi=(Xi, Yi),
-        method="nearest"
+        method="linear"
     )
 
     # fallback for NaNs (very common)
@@ -238,7 +244,7 @@ def contourf_plot(files, datadir):
     plt.axis("equal")
     plt.tight_layout()
     plt.savefig("contour_plot.png", dpi=300)
-    plt.show()
+    plt.show()        
 
 #now need to read results to calculate regression rate
 #using:
@@ -335,8 +341,7 @@ def main():
     inst_rates, avg_burn_avg, avg_burn_max = calc_reg_rate(times, max_r, avg_r)
     save_burn_rates(inst_rates, avg_burn_avg, avg_burn_max, burn_output_file)
     plot_burn_rates(inst_rates, avg_burn_avg, avg_burn_max)
-    # contour_plot()
-    contourf_plot(files, sys.argv[1])
+    contourf_plot()
 
     print(f"Results saved to {results_file} and {burn_output_file}")
     print(f"Burn rate plot saved as {burn_rate_plot_file}")

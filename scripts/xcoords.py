@@ -25,7 +25,7 @@ datadir = "./eta_coords"
 if not os.path.exists(datadir):
     os.makedirs(datadir)
 
-min_temp = 400.0 #change as desired
+min_temp = 640.0 #change as desired
 
 for n in range(3):
     print('--------------------------------')

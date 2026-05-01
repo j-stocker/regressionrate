@@ -12,6 +12,17 @@ if len(sys.argv) < 2:
 datadir = sys.argv[1]
 output_file = "results.txt"
 
+def trim_zero_burn_rates(inst_burn_rates):
+    """
+    Returns the list of (time, burn_rate) up to but not including the first zero or negative burn rate.
+    """
+    trimmed = []
+    for t, rate in inst_burn_rates:
+        if rate <= 0:
+            break
+        trimmed.append((t, rate))
+    return trimmed
+
 def extract_third_column(filename):
     '''Extracts third column (y coords) from XYZ file'''
     third_column_values = []
@@ -22,7 +33,7 @@ def extract_third_column(filename):
                 parts = line.strip().split()
                 if len(parts) >= 3:
                     try:
-                        value = float(parts[2])
+                        value = float(parts[2]) * 1000
                         third_column_values.append(value)
                     except ValueError:
                         continue  # Skip lines with invalid float conversion
@@ -84,8 +95,8 @@ def extract_xy_coords(filename):
                 parts = line.strip().split()
                 if len(parts) >= 3:
                     try:
-                        x = float(parts[1])
-                        y = float(parts[2])
+                        x = float(parts[1]) * 1000
+                        y = float(parts[2]) * 1000
                         x_coords.append(x)
                         y_coords.append(y)
                     except ValueError:
@@ -228,6 +239,7 @@ def main():
     times, max_x, avg_x = read_results_file(results_file)
 
     inst_rates, avg_burn_avg, avg_burn_max = calc_reg_rate(times, max_x, avg_x)
+    inst_rates = trim_zero_burn_rates(inst_rates)
     save_burn_rates(inst_rates, avg_burn_avg, avg_burn_max, burn_output_file)
     plot_burn_rates(inst_rates, avg_burn_avg, avg_burn_max)
     contour_plot()
